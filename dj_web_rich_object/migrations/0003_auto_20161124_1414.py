@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dj_web_rich_object', '0004_auto_20161124_1016'),
+        ('dj_web_rich_object', '0002_auto_20161124_0937'),
     ]
 
     operations = [
@@ -15,6 +15,11 @@ class Migration(migrations.Migration):
             model_name='webrichobject',
             name='base_url',
             field=models.TextField(max_length=500, verbose_name='Base URL'),
+        ),
+        migrations.AlterField(
+            model_name='webrichobject',
+            name='site_name',
+            field=models.CharField(max_length=200, null=True, verbose_name='site name', blank=True),
         ),
         migrations.AlterField(
             model_name='webrichobject',
