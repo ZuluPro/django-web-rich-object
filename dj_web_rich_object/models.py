@@ -39,9 +39,9 @@ class WebRichObject(models.Model):
     title = models.CharField(max_length=300, verbose_name=_("title"))
     type = models.CharField(max_length=30, verbose_name=_("type"))
     image = models.URLField(null=True, blank=True, verbose_name=_("image"))
-    url = models.URLField(max_length=500, verbose_name=_("URL"))
+    url = models.TextField(max_length=500, verbose_name=_("URL"))
 
-    base_url = models.URLField(max_length=500, verbose_name=_("Base URL"))
+    base_url = models.TextField(max_length=500, verbose_name=_("Base URL"))
 
     site_name = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("site name"))
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))
