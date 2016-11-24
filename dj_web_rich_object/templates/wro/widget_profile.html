@@ -1,6 +1,8 @@
 <div class="wro-widget wro-widget-{{ obj.type }}">
-<iframe width="98%" height="315" src="{{ obj.get_embed_youtube }}" frameborder="0" allowfullscreen></iframe>
 <a href="{{ obj.url }}" target="_blank">
+{% if obj.image %}
+<img src="{{ obj.image }}"/>
+{% endif %}
 <h3>{{ obj.title }}</h3>
 {% if obj.description %}
 <p class="wro-description">{{ obj.description }}</p>
