@@ -1,5 +1,6 @@
-recursive-include contacts/templates *
-recursive-include contacts/locales *.po *.mo
+recursive-include dj_web_rich_object/templates *
+recursive-include dj_web_rich_object/locales *.po *.mo
+recursive-exclude dj_web_rich_object/locales *.pyc *swp
 include requirements*.txt
 include README.rst
 include LICENSE.txt
