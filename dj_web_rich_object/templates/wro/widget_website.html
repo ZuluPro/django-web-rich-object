@@ -1,11 +1,13 @@
-<div class="wro-widget wro-widget-{{ obj.type }}">
-<a href="{{ obj.url }}" target="_blank">
-{% if obj.image %}
-<img src="{{ obj.image }}"/>
-{% endif %}
-<h3>{{ obj.title }}</h3>
-{% if obj.description %}
-<p class="wro-description">{{ obj.description }}</p>
-{% endif %}
-</a>
-</div>
+{% extends "wro/base.html" %}
+
+{% block content %}
+ <a href="{{ obj.url }}" target="_blank">
+  {% if obj.image %}
+   <img src="{{ obj.image }}"/>
+  {% endif %}
+  <h3>{{ obj.title }}</h3>
+  {% if obj.description %}
+   <p class="wro-description">{{ obj.description }}</p>
+  {% endif %}
+ </a>
+{% endblock %}

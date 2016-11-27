@@ -1,0 +1,8 @@
+{% extends "admin/change_form.html" %}
+
+{% block field_sets %}
+{{ block.super }}
+<fieldset class="module aligned wide">
+{{ original.get_widget|safe }}
+</fieldset>
+{% endblock %}

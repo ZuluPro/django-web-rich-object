@@ -1,9 +1,10 @@
 from __future__ import unicode_literals
 
 try:
-    from urllib.parse import urlparse, parse_qs
+    from urllib.parse import urlparse, parse_qs, quote
 except ImportError:
     from urlparse import urlparse, parse_qs
+    from urllib2 import quote
 
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
@@ -13,6 +14,7 @@ from django.shortcuts import render_to_response
 import web_rich_object
 
 EMBED_YOUTUBE_TEMPLATE = 'https://www.youtube.com/embed/%(id)s'
+EMBED_FACEBOOK_TEMPLATE = 'https://www.facebook.com/plugins/video.php?href=%(id)s&show_text=0&width=560'
 
 
 class WebRichObjectManager(models.Manager):
@@ -83,9 +85,21 @@ class WebRichObject(models.Model):
         return 'wro/widget_%s.html' % self.type
 
     def get_widget(self):
-        return render_to_response(self.template_name, {'obj': self})
+        return render_to_response(self.template_name, {'obj': self}).getvalue()
+
+    def get_embed_url(self):
+        if 'youtube' in self.url:
+            return self.get_embed_youtube()
+        elif 'facebook' in self.url:
+            return self.get_embed_facebook()
+        else:
+            raise NotImplementedError("")
 
     def get_embed_youtube(self):
         parsed_url = urlparse(self.url)
         video_id = parse_qs(parsed_url.query).get('v')[0]
         return EMBED_YOUTUBE_TEMPLATE % {'id': video_id}
+
+    def get_embed_facebook(self):
+        video_id = quote(self.url)
+        return EMBED_FACEBOOK_TEMPLATE % {'id': video_id}
