@@ -27,7 +27,9 @@ class WebRichObjectManager(models.Manager):
                                url=wro.url,
                                base_url=url,
                                site_name=wro.site_name,
-                               description=wro.description)
+                               description=wro.description,
+                               subtype=wro.subtype,
+                               author=wro.author)
         return instance
 
     def create_or_update_from_url(self, url):
@@ -41,6 +43,7 @@ class WebRichObjectManager(models.Manager):
 class WebRichObject(models.Model):
     title = models.CharField(max_length=300, verbose_name=_("title"))
     type = models.CharField(max_length=30, verbose_name=_("type"))
+    subtype = models.CharField(max_length=30, verbose_name=_("subtype"))
     image = models.URLField(null=True, blank=True, verbose_name=_("image"))
     url = models.TextField(max_length=500, verbose_name=_("URL"))
 
@@ -48,6 +51,7 @@ class WebRichObject(models.Model):
 
     site_name = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("site name"))
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))
+    author = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("author"))
 
     create_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -73,6 +77,8 @@ class WebRichObject(models.Model):
     get_link.allow_tags = True
 
     def get_image(self, target='_blank'):
+        if not self.image:
+            return ''
         return '<a href="%(url)s" target="%(target)s"><img src="%(image)s" height="40px"></a>' % {
             'url': self.image,
             'target': target,

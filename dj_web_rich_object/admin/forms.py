@@ -8,6 +8,7 @@ class WebRichObjectAdminForm(forms.ModelForm):
         model = models.WebRichObject
         exclude = ()
         widgets = {
+            'image': admin_widgets.AdminURLFieldWidget(),
             'url': admin_widgets.AdminURLFieldWidget(),
             'base_url': admin_widgets.AdminURLFieldWidget()
         }

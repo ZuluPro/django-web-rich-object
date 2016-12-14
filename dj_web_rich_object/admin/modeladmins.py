@@ -7,8 +7,9 @@ from dj_web_rich_object.admin import forms
 
 
 class WebRichObjectAdmin(admin.ModelAdmin):
-    list_display = ('title', 'get_image', 'get_link', 'site_name', 'type')
-    list_filter = ('type', 'create_at', 'updated_at')
+    list_display = ('title', 'get_image', 'get_link', 'site_name', 'type',
+                    'subtype')
+    list_filter = ('type', 'create_at', 'updated_at', 'subtype')
     date_hierarchy = 'updated_at'
     ordering = ('-updated_at',)
     form = forms.WebRichObjectAdminForm
@@ -16,8 +17,10 @@ class WebRichObjectAdmin(admin.ModelAdmin):
         (None, {
             'classes': ('wide',),
             'fields': (
-                ('title', 'type', 'site_name'),
+                ('title', 'site_name', 'author'),
                 'description',
+                'image',
+                ('type', 'subtype'),
                 ('url', 'base_url'),
             )
         }),
