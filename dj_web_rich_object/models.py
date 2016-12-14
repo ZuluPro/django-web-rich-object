@@ -10,6 +10,7 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import render_to_response
+from django.template import TemplateDoesNotExist
 
 import web_rich_object
 
@@ -85,7 +86,10 @@ class WebRichObject(models.Model):
         return 'wro/widget_%s.html' % self.type
 
     def get_widget(self):
-        return render_to_response(self.template_name, {'obj': self}).getvalue()
+        try:
+            return render_to_response(self.template_name, {'obj': self}).getvalue()
+        except TemplateDoesNotExist:
+            return render_to_response('wro/widget_website.html', {'obj': self}).getvalue()
 
     def get_embed_url(self):
         if 'youtube' in self.url:
