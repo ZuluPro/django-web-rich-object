@@ -51,8 +51,8 @@ class WebRichObject(models.Model):
     base_url = models.TextField(max_length=500, verbose_name=_("Base URL"))
 
     site_name = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("site name"))
-    description = models.TextField(null=True, blank=True, verbose_name=_("description"))
-    author = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("author"))
+    description = models.TextField(null=True, blank=True, default='', verbose_name=_("description"))
+    author = models.CharField(max_length=100, null=True, blank=True, default=None, verbose_name=_("author"))
 
     create_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
