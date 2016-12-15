@@ -1,0 +1,6 @@
+dj-database-url
+coverage
+xhtml2pdf==0.2b1
+html5lib==1.0b8
+mock
+coverage
