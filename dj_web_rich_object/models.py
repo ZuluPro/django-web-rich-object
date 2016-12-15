@@ -34,6 +34,7 @@ class WebRichObjectManager(models.Manager):
 
     def create_or_update_from_url(self, url):
         if self.filter(base_url=url).exists():
+            # TODO: Update not implemented
             return self.filter(base_url=url).first()
         else:
             return self.create_from_url(url=url)
@@ -102,6 +103,12 @@ class WebRichObject(models.Model):
             return self.get_embed_youtube()
         elif 'facebook' in self.url:
             return self.get_embed_facebook()
+        elif 'vimeo.com/' in self.url:
+            return self.get_embed_vimeo()
+        elif 'www.dailymotion.com/' in self.url:
+            return self.get_embed_dailymotion()
+        elif 'vine.co/' in self.url:
+            return self.get_embed_vine()
         else:
             raise NotImplementedError("")
 
@@ -113,3 +120,25 @@ class WebRichObject(models.Model):
     def get_embed_facebook(self):
         video_id = quote(self.url)
         return EMBED_FACEBOOK_TEMPLATE % {'id': video_id}
+
+    def get_embed_vimeo(self):
+        parsed_url = urlparse(self.url)
+        url = '%s://player.vimeo.com/video%s' % (parsed_url.scheme,
+                                                 parsed_url.path)
+        return url
+
+    def get_embed_dailymotion(self):
+        parsed_url = urlparse(self.url)
+        video_id = parsed_url.path.split('/')[-1].split('_')[0]
+        url = '%s://%s/embed/video/%s' % (parsed_url.scheme,
+                                          parsed_url.hostname,
+                                          video_id)
+        return url
+
+    def get_embed_vine(self):
+        parsed_url = urlparse(self.url)
+        video_id = parsed_url.path.split('/')[-1]
+        url = '%s://%s/v/%s/embed/simple' % (parsed_url.scheme,
+                                             parsed_url.hostname,
+                                             video_id)
+        return url
