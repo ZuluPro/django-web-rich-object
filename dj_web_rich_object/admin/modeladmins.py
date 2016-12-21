@@ -17,11 +17,25 @@ class WebRichObjectAdmin(admin.ModelAdmin):
         (None, {
             'classes': ('wide',),
             'fields': (
-                ('title', 'site_name', 'author'),
+                ('title', 'site_name'),
+                'author',
                 'description',
-                'image',
+            )
+        }),
+        (_("Type"), {
+            'fields': (
                 ('type', 'subtype'),
+            )
+        }),
+        (_("URLs"), {
+            'fields': (
                 ('url', 'base_url'),
+                'image',
+            )
+        }),
+        (_("Dates"), {
+            'fields': (
+                ('created_time', 'published_time', 'modified_time'),
             )
         }),
     )

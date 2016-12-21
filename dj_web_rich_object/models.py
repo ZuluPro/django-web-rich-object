@@ -19,25 +19,32 @@ EMBED_FACEBOOK_TEMPLATE = 'https://www.facebook.com/plugins/video.php?href=%(id)
 
 
 class WebRichObjectManager(models.Manager):
-    def create_from_url(self, url=None):
+    def create_from_url(self, url=None, **kwargs):
         wro = web_rich_object.WebRichObject(url)
-        instance = self.create(title=wro.title,
-                               type=wro.type,
-                               image=wro.image,
-                               url=wro.url,
-                               base_url=url,
-                               site_name=wro.site_name,
-                               description=wro.description,
-                               subtype=wro.subtype,
-                               author=wro.author)
+        wro_attrs = {
+            'title': wro.title,
+            'type': wro.type,
+            'image': wro.image,
+            'url': wro.url,
+            'base_url': wro.base_url,
+            'site_name': wro.site_name,
+            'description': wro.description,
+            'subtype': wro.subtype,
+            'author': wro.author,
+            'created_time': wro.created_time,
+            'published_time': wro.published_time,
+            'modified_time': wro.modified_time,
+        }
+        wro_attrs.update(kwargs)
+        instance = self.create(**wro_attrs)
         return instance
 
-    def create_or_update_from_url(self, url):
+    def create_or_update_from_url(self, url, **kwargs):
         if self.filter(base_url=url).exists():
             # TODO: Update not implemented
             return self.filter(base_url=url).first()
         else:
-            return self.create_from_url(url=url)
+            return self.create_from_url(url=url, **kwargs)
 
 
 @python_2_unicode_compatible
@@ -45,23 +52,28 @@ class WebRichObject(models.Model):
     title = models.CharField(max_length=300, verbose_name=_("title"))
     type = models.CharField(max_length=30, verbose_name=_("type"))
     subtype = models.CharField(max_length=30, verbose_name=_("subtype"))
+
     image = models.URLField(null=True, blank=True, verbose_name=_("image"))
     url = models.TextField(max_length=500, verbose_name=_("URL"))
-
     base_url = models.TextField(max_length=500, verbose_name=_("Base URL"))
 
     site_name = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("site name"))
     description = models.TextField(null=True, blank=True, default='', verbose_name=_("description"))
     author = models.CharField(max_length=100, null=True, blank=True, default=None, verbose_name=_("author"))
 
+    created_time = models.DateTimeField(blank=True, null=True, default=None, verbose_name=_("created time"))
+    published_time = models.DateTimeField(blank=True, null=True, default=None, verbose_name=_("published time"))
+    modified_time = models.DateTimeField(blank=True, null=True, default=None, verbose_name=_("modified time"))
+
+    # Plus
     create_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
     is_valid = models.BooleanField(default=True)
 
     objects = WebRichObjectManager()
 
     class Meta:
+        app_label = 'dj_web_rich_object'
         verbose_name = _("web rich object")
         verbose_name_plural = _("web rich objects")
 
