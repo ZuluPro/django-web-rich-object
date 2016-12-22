@@ -121,6 +121,8 @@ class WebRichObject(models.Model):
             return self.get_embed_dailymotion()
         elif 'vine.co/' in self.url:
             return self.get_embed_vine()
+        elif self.subtype == 'html':
+            return self.url
         else:
             raise NotImplementedError("")
 
