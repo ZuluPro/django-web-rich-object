@@ -1,33 +1,12 @@
 import factory
 from factory import fuzzy
-
-WRO_TYPES = (
-    'article',
-    'website',
-    'video',
-    'image',
-    'application'
-)
-WRO_SUBTYPES = {
-    'article': ('html',),
-    'website': ('html',),
-    'video': ('html', 'mp4',),
-    'image': ('png', 'jpeg', 'gif'),
-    'application': ('pdf',),
-}
-
-
-def laze_subtype(wro):
-    if wro.type not in WRO_SUBTYPES:
-        return 'website'
-    subtypes = WRO_SUBTYPES[wro.type]
-    return fuzzy.FuzzyChoice(subtypes).fuzz()
+from web_rich_object.tests import factories as wro_factories
 
 
 class WebRichObjectFactory(factory.django.DjangoModelFactory):
     title = factory.Faker('sentence')
-    type = fuzzy.FuzzyChoice(WRO_TYPES)
-    subtype = factory.LazyAttribute(laze_subtype)
+    type = fuzzy.FuzzyChoice(wro_factories.WRO_TYPES)
+    subtype = factory.LazyAttribute(wro_factories.lazy_subtype)
 
     image = factory.Faker('image_url')
     base_url = factory.Faker('uri')

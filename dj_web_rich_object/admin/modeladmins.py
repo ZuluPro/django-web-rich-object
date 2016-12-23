@@ -7,6 +7,7 @@ from dj_web_rich_object.admin import forms
 
 
 class WebRichObjectAdmin(admin.ModelAdmin):
+    actions = ()
     list_display = ('title', 'get_image', 'get_link', 'site_name', 'type',
                     'subtype')
     list_filter = ('type', 'create_at', 'updated_at', 'subtype')
@@ -30,7 +31,7 @@ class WebRichObjectAdmin(admin.ModelAdmin):
         (_("URLs"), {
             'fields': (
                 ('url', 'base_url'),
-                'image',
+                ('image', 'video'),
             )
         }),
         (_("Dates"), {
@@ -63,7 +64,7 @@ class WebRichObjectAdmin(admin.ModelAdmin):
             return super(WebRichObjectAdmin, self).add_view(request, form_url, extra_context)
         try:
             wro = models.WebRichObject.objects.create_or_update_from_url(request.POST['url'])
-            return redirect("/admin/dj_web_rich_object/webrichobject/%s" % wro.id)
+            return redirect("/admin/dj_web_rich_object/webrichobject/%s/" % wro.id)
         except Exception as err:
             msg = 'Error: %s' % (err.message or str(err.args))
             self.message_user(request, msg, messages.ERROR)

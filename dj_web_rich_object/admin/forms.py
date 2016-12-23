@@ -9,6 +9,8 @@ class WebRichObjectAdminForm(forms.ModelForm):
         exclude = ()
         widgets = {
             'image': admin_widgets.AdminURLFieldWidget(),
+            'video': admin_widgets.AdminURLFieldWidget(),
+            # 'audio': admin_widgets.AdminURLFieldWidget(),
             'url': admin_widgets.AdminURLFieldWidget(),
             'base_url': admin_widgets.AdminURLFieldWidget()
         }

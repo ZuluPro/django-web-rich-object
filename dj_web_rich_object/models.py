@@ -25,6 +25,7 @@ class WebRichObjectManager(models.Manager):
             'title': wro.title,
             'type': wro.type,
             'image': wro.image,
+            'video': wro.video,
             'url': wro.url,
             'base_url': wro.base_url,
             'site_name': wro.site_name,
@@ -53,9 +54,11 @@ class WebRichObject(models.Model):
     type = models.CharField(max_length=30, verbose_name=_("type"))
     subtype = models.CharField(max_length=30, verbose_name=_("subtype"))
 
-    image = models.URLField(null=True, blank=True, verbose_name=_("image"))
     url = models.TextField(max_length=500, verbose_name=_("URL"))
     base_url = models.TextField(max_length=500, verbose_name=_("Base URL"))
+
+    image = models.URLField(null=True, blank=True, verbose_name=_("image"))
+    video = models.URLField(null=True, blank=True, verbose_name=_("video"))
 
     site_name = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("site name"))
     description = models.TextField(null=True, blank=True, default='', verbose_name=_("description"))
@@ -106,53 +109,8 @@ class WebRichObject(models.Model):
 
     def get_widget(self):
         try:
+            if self.type == 'video' and self.video is None:
+                raise TemplateDoesNotExist("No video provided")
             return render_to_response(self.template_name, {'obj': self}).getvalue()
         except TemplateDoesNotExist:
             return render_to_response('wro/widget_website.html', {'obj': self}).getvalue()
-
-    def get_embed_url(self):
-        if 'youtube' in self.url:
-            return self.get_embed_youtube()
-        elif 'facebook' in self.url:
-            return self.get_embed_facebook()
-        elif 'vimeo.com/' in self.url:
-            return self.get_embed_vimeo()
-        elif 'www.dailymotion.com/' in self.url:
-            return self.get_embed_dailymotion()
-        elif 'vine.co/' in self.url:
-            return self.get_embed_vine()
-        elif self.subtype == 'html':
-            return self.url
-        else:
-            raise NotImplementedError("")
-
-    def get_embed_youtube(self):
-        parsed_url = urlparse(self.url)
-        video_id = parse_qs(parsed_url.query).get('v')[0]
-        return EMBED_YOUTUBE_TEMPLATE % {'id': video_id}
-
-    def get_embed_facebook(self):
-        video_id = quote(self.url)
-        return EMBED_FACEBOOK_TEMPLATE % {'id': video_id}
-
-    def get_embed_vimeo(self):
-        parsed_url = urlparse(self.url)
-        url = '%s://player.vimeo.com/video%s' % (parsed_url.scheme,
-                                                 parsed_url.path)
-        return url
-
-    def get_embed_dailymotion(self):
-        parsed_url = urlparse(self.url)
-        video_id = parsed_url.path.split('/')[-1].split('_')[0]
-        url = '%s://%s/embed/video/%s' % (parsed_url.scheme,
-                                          parsed_url.hostname,
-                                          video_id)
-        return url
-
-    def get_embed_vine(self):
-        parsed_url = urlparse(self.url)
-        video_id = parsed_url.path.split('/')[-1]
-        url = '%s://%s/v/%s/embed/simple' % (parsed_url.scheme,
-                                             parsed_url.hostname,
-                                             video_id)
-        return url

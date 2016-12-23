@@ -3,7 +3,9 @@
 {% block content %}
  <a href="{{ obj.url }}" target="_blank">
   {% if obj.image %}
-   <img src="{{ obj.image }}"/>
+   <div class="wro-image-container">
+    <img src="{{ obj.image }}"/>
+   </div>
   {% endif %}
   <h3>{{ obj.title }}</h3>
   {% if obj.description %}
