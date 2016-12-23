@@ -1,1 +1,1 @@
-web-rich-object
+web-rich-object>=0.2.2

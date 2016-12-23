@@ -1,11 +1,5 @@
 from __future__ import unicode_literals
 
-try:
-    from urllib.parse import urlparse, parse_qs, quote
-except ImportError:
-    from urlparse import urlparse, parse_qs
-    from urllib2 import quote
-
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
@@ -13,9 +7,6 @@ from django.shortcuts import render_to_response
 from django.template import TemplateDoesNotExist
 
 import web_rich_object
-
-EMBED_YOUTUBE_TEMPLATE = 'https://www.youtube.com/embed/%(id)s'
-EMBED_FACEBOOK_TEMPLATE = 'https://www.facebook.com/plugins/video.php?href=%(id)s&show_text=0&width=560'
 
 
 class WebRichObjectManager(models.Manager):
