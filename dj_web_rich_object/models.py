@@ -55,9 +55,9 @@ class WebRichObject(models.Model):
     url = models.TextField(max_length=500, verbose_name=_("URL"))
     base_url = models.TextField(max_length=500, verbose_name=_("Base URL"))
 
-    image = models.URLField(null=True, blank=True, verbose_name=_("image"))
+    image = models.TextField(null=True, blank=True, verbose_name=_("image"))
 
-    video = models.URLField(null=True, blank=True, verbose_name=_("video"))
+    video = models.TextField(null=True, blank=True, verbose_name=_("video"))
     video_width = models.PositiveIntegerField(null=True, blank=True, verbose_name=_("video width"))
     video_height = models.PositiveIntegerField(null=True, blank=True, verbose_name=_("video height"))
 
