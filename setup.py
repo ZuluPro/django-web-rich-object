@@ -12,11 +12,10 @@ setup(
     version=dj_web_rich_object.__version__,
     description=dj_web_rich_object.__doc__,
     long_description=read('README.rst'),
-    keywords=['web', 'django', 'opengraph', 'web-rich-object'],
+    keywords=dj_web_rich_object.__keywords__,
     author=dj_web_rich_object.__author__,
     author_email=dj_web_rich_object.__email__,
     url=dj_web_rich_object.__url__,
-
     packages=find_packages(),
     classifiers=[
         'Framework :: Django',

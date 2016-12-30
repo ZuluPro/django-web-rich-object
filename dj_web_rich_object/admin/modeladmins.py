@@ -14,7 +14,7 @@ class WebRichObjectAdmin(admin.ModelAdmin):
     date_hierarchy = 'updated_at'
     ordering = ('-updated_at',)
     form = forms.WebRichObjectAdminForm
-    fieldsets = (
+    default_fieldsets = (
         (None, {
             'classes': ('wide',),
             'fields': (
@@ -40,6 +40,38 @@ class WebRichObjectAdmin(admin.ModelAdmin):
             )
         }),
     )
+    video_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': (
+                ('title', 'site_name'),
+                'author',
+                'description',
+            )
+        }),
+        (_("Type"), {
+            'fields': (
+                ('type', 'subtype'),
+            )
+        }),
+        (_("Video"), {
+            'fields': (
+                'video',
+                ('video_width', 'video_height'),
+            )
+        }),
+        (_("URLs"), {
+            'fields': (
+                ('url', 'base_url'),
+                ('image'),
+            )
+        }),
+        (_("Dates"), {
+            'fields': (
+                ('created_time', 'published_time', 'modified_time'),
+            )
+        }),
+    )
 
     add_form = forms.WebRichObjectAdminAddForm
     add_fieldsets = (
@@ -57,7 +89,9 @@ class WebRichObjectAdmin(admin.ModelAdmin):
     def get_fieldsets(self, request, obj=None):
         if obj is None:
             return self.add_fieldsets
-        return super(WebRichObjectAdmin, self).get_fieldsets(request, obj)
+        if obj.type.startswith('video'):
+            return self.video_fieldsets
+        return self.default_fieldsets
 
     def add_view(self, request, form_url='', extra_context=None):
         if request.method == 'GET':

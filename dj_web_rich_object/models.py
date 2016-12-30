@@ -14,18 +14,25 @@ class WebRichObjectManager(models.Manager):
         wro = web_rich_object.WebRichObject(url)
         wro_attrs = {
             'title': wro.title,
-            'type': wro.type,
-            'image': wro.image,
-            'video': wro.video,
-            'url': wro.url,
-            'base_url': wro.base_url,
             'site_name': wro.site_name,
             'description': wro.description,
+
+            'type': wro.type,
             'subtype': wro.subtype,
+
+            'image': wro.image,
+
+            'url': wro.url,
+            'base_url': wro.base_url,
+
             'author': wro.author,
             'created_time': wro.created_time,
             'published_time': wro.published_time,
             'modified_time': wro.modified_time,
+
+            'video': wro.video,
+            'video_width': wro.video_width,
+            'video_height': wro.video_height,
         }
         wro_attrs.update(kwargs)
         instance = self.create(**wro_attrs)
@@ -49,7 +56,10 @@ class WebRichObject(models.Model):
     base_url = models.TextField(max_length=500, verbose_name=_("Base URL"))
 
     image = models.URLField(null=True, blank=True, verbose_name=_("image"))
+
     video = models.URLField(null=True, blank=True, verbose_name=_("video"))
+    video_width = models.PositiveIntegerField(null=True, blank=True, verbose_name=_("video width"))
+    video_height = models.PositiveIntegerField(null=True, blank=True, verbose_name=_("video height"))
 
     site_name = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("site name"))
     description = models.TextField(null=True, blank=True, default='', verbose_name=_("description"))
@@ -98,10 +108,12 @@ class WebRichObject(models.Model):
     def template_name(self):
         return 'wro/widget_%s.html' % self.type
 
-    def get_widget(self):
+    def get_widget(self, **kwargs):
+        context = kwargs.copy()
+        context['obj'] = self
         try:
             if self.type == 'video' and self.video is None:
                 raise TemplateDoesNotExist("No video provided")
-            return render_to_response(self.template_name, {'obj': self}).getvalue()
+            return render_to_response(self.template_name, context).getvalue()
         except TemplateDoesNotExist:
-            return render_to_response('wro/widget_website.html', {'obj': self}).getvalue()
+            return render_to_response('wro/widget_website.html', context).getvalue()

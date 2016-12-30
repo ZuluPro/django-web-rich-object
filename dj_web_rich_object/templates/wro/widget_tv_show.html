@@ -1,11 +1,1 @@
-{% extends "wro/base.html" %}
-
-{% block content %}
-<iframe width="98%" height="315" src="{{ obj.video }}" frameborder="0" allowfullscreen></iframe>
-<a href="{{ obj.url }}" target="_blank">
-<h3>{{ obj.title }}</h3>
-{% if obj.description %}
-<p class="wro-description">{{ obj.description }}</p>
-{% endif %}
-</a>
-{% endblock %}
+widget_video.html
